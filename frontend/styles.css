@@ -1,0 +1,112 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b0e17;
+  --panel: #121725;
+  --line: #232a3d;
+  --text: #e8ecf7;
+  --muted: #8d96ad;
+  --accent: #4de2c4;
+  --accent-text: #052a23;
+  --danger: #ff6b81;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { color: inherit; }
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px clamp(16px, 4vw, 48px);
+  border-bottom: 1px solid var(--line);
+}
+
+.logo { font-weight: 800; letter-spacing: 0.3em; text-decoration: none; color: var(--accent); }
+
+nav { display: flex; flex-wrap: wrap; gap: 6px; }
+nav a { padding: 6px 12px; border-radius: 6px; text-decoration: none; color: var(--muted); }
+nav a:hover, nav a.active { color: var(--text); background: var(--panel); }
+
+main { padding: clamp(16px, 4vw, 48px); max-width: 1000px; margin: 0 auto; }
+
+h1 { margin-top: 0; letter-spacing: 0.05em; }
+
+.hero h1 { font-size: clamp(56px, 12vw, 120px); letter-spacing: 0.25em; margin: 0 0 8px; color: var(--accent); }
+.lead { color: var(--muted); max-width: 60ch; line-height: 1.6; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 32px; }
+.card { display: block; padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); text-decoration: none; }
+.card:hover { border-color: var(--accent); }
+.card h2 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: var(--muted); line-height: 1.5; font-size: 14px; }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: clamp(16px, 3vw, 32px); max-width: 640px; }
+.panel.wide { max-width: none; }
+
+.match { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.board { width: 100%; max-width: 800px; height: auto; aspect-ratio: 8 / 5; border: 1px solid var(--line); border-radius: 8px; background: #05070d; }
+.help { color: var(--muted); font-size: 14px; margin: 0; }
+
+.actions, .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.row { margin: 16px 0 4px; }
+
+button, .button {
+  font: inherit;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-decoration: none;
+}
+button:hover, .button:hover { border-color: var(--accent); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 700; }
+button.ghost { color: var(--muted); }
+
+input[type="text"] {
+  font: inherit;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  min-width: 0;
+  flex: 1 1 180px;
+}
+
+.error { color: var(--danger); min-height: 1.4em; margin: 4px 0; }
+.result { color: var(--accent); margin: 0; width: 100%; text-align: center; }
+
+.players { padding-left: 24px; }
+.players li { margin: 6px 0; }
+.players li button { margin-left: 10px; padding: 2px 8px; }
+
+.choices { border: 1px solid var(--line); border-radius: 8px; margin: 0 0 16px; padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.choices legend { color: var(--muted); padding: 0 6px; }
+.choices label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+
+.banner { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin: 0 0 20px; }
+.banner p { margin: 0; }
+.champion { font-size: 20px; }
+
+.bracket { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 20px; }
+.round { display: flex; flex-direction: column; justify-content: space-around; gap: 12px; min-width: 160px; }
+.round h3 { margin: 0; color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; }
+.pair { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.pair span { padding: 8px 12px; border-bottom: 1px solid var(--line); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pair span:last-child { border-bottom: 0; }
+.pair .won { color: var(--accent-text); background: var(--accent); font-weight: 700; }
+.pair .empty { color: var(--muted); }
