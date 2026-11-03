@@ -1,75 +1,11 @@
 import { el } from '../dom.js';
+import { MAX_ALIAS, MAX_PLAYERS, advanceWinners, aliasError, buildBracket, nextMatch, roundName, type Match } from '../game/bracket.js';
 import { mountMatch } from './match.js';
-
-interface Match {
-  players: [string | null, string | null];
-  winner: string | null;
-}
-
-const MAX_PLAYERS = 8;
-const MAX_ALIAS = 16;
 
 // Kept outside the view: leaving the page and coming back keeps the tournament.
 let registered: string[] = [];
 let rounds: Match[][] | null = null;
 let current: { round: number; index: number } | null = null;
-
-function shuffle<T>(items: T[]): T[] {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
-// Single elimination. With a player count that is not a power of two, some
-// first-round matches are byes: that player goes straight to the next round.
-function buildBracket(names: string[]): Match[][] {
-  const players = shuffle(names);
-  let size = 2;
-  while (size < players.length) size *= 2;
-  const byes = size - players.length;
-  const first: Match[] = [];
-  let next = 0;
-  for (let m = 0; m < size / 2; m++) {
-    const a = players[next++];
-    const b = m < byes ? null : players[next++];
-    first.push({ players: [a, b], winner: b === null ? a : null });
-  }
-  const bracket: Match[][] = [first];
-  for (let count = size / 4; count >= 1; count /= 2) {
-    bracket.push(Array.from({ length: count }, (): Match => ({ players: [null, null], winner: null })));
-  }
-  advanceWinners(bracket);
-  return bracket;
-}
-
-function advanceWinners(bracket: Match[][]): void {
-  for (let r = 0; r + 1 < bracket.length; r++) {
-    bracket[r].forEach((match, i) => {
-      if (match.winner) bracket[r + 1][Math.floor(i / 2)].players[i % 2] = match.winner;
-    });
-  }
-}
-
-function nextMatch(bracket: Match[][]): { round: number; index: number } | null {
-  for (let r = 0; r < bracket.length; r++) {
-    for (let i = 0; i < bracket[r].length; i++) {
-      const m = bracket[r][i];
-      if (!m.winner && m.players[0] && m.players[1]) return { round: r, index: i };
-    }
-  }
-  return null;
-}
-
-function roundName(r: number, total: number): string {
-  const fromEnd = total - r;
-  if (fromEnd === 1) return 'Final';
-  if (fromEnd === 2) return 'Semi-finals';
-  if (fromEnd === 3) return 'Quarter-finals';
-  return `Round ${r + 1}`;
-}
 
 export function tournamentView(root: HTMLElement): () => void {
   let stopMatch: (() => void) | null = null;
@@ -88,16 +24,14 @@ export function tournamentView(root: HTMLElement): () => void {
     const error = el('p', { class: 'error', role: 'alert' });
     const add = (): void => {
       const alias = input.value.trim();
-      if (!alias) error.textContent = 'Type an alias first.';
-      else if (alias.length > MAX_ALIAS) error.textContent = `An alias has at most ${MAX_ALIAS} characters.`;
-      else if (registered.some((p) => p.toLowerCase() === alias.toLowerCase())) error.textContent = `"${alias}" is already taken.`;
-      else if (registered.length >= MAX_PLAYERS) error.textContent = `${MAX_PLAYERS} players at most.`;
-      else {
-        registered.push(alias);
-        draw();
+      const problem = aliasError(alias, registered);
+      if (problem) {
+        error.textContent = problem;
+        input.focus();
         return;
       }
-      input.focus();
+      registered.push(alias);
+      draw();
     };
     input.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') add();
