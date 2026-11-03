@@ -43,7 +43,7 @@ export class PongAI {
 }
 
 // Folds a straight line back between the top and bottom walls, like the ball bouncing.
-function reflect(y: number): number {
+export function reflect(y: number): number {
   const span = HEIGHT - 2 * BALL_R;
   let position = (((y - BALL_R) % (2 * span)) + 2 * span) % (2 * span);
   if (position > span) position = 2 * span - position;
