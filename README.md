@@ -1,5 +1,7 @@
 # ft_transcendence
 
+[![CI](https://github.com/HexCyb/ft_transcendence/actions/workflows/ci.yml/badge.svg)](https://github.com/HexCyb/ft_transcendence/actions/workflows/ci.yml)
+
 A single-page **Pong** website written in TypeScript. Two players can share one keyboard, up to eight can play a knockout tournament, or you can face an AI opponent. It runs in Docker behind nginx over HTTPS and starts with one command.
 
 > Originally completed at **42 Türkiye** as the last project of the common core. This repository is a 2026 rewrite, because the original code was lost. It covers the mandatory part plus two modules: the AI opponent and game customization.
@@ -58,3 +60,11 @@ frontend/
     ├── game/   pong.ts  ai.ts
     └── views/  pages.ts  match.ts  tournament.ts
 ```
+
+## Continuous integration
+
+Every push runs [GitHub Actions](https://github.com/HexCyb/ft_transcendence/actions/workflows/ci.yml) (`.github/workflows/ci.yml`):
+
+- strict TypeScript check, then 12 unit tests (`node --test`) for the tournament bracket, byes, alias rules and the AI's wall-bounce prediction
+- a production build
+- builds the Docker image, checks that HTTPS answers on 8443 and that a deep link like `/tournament` falls back to `index.html`
