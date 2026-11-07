@@ -61,6 +61,12 @@ frontend/
     └── views/  pages.ts  match.ts  tournament.ts
 ```
 
+## Backend
+
+Player accounts, match results and an Elo leaderboard for this game are a separate project:
+[**transcendence-api**](https://github.com/HexCyb/transcendence-api), a REST API in C# / ASP.NET Core with PostgreSQL.
+This website runs on its own and does not need it.
+
 ## Continuous integration
 
 Every push runs [GitHub Actions](https://github.com/HexCyb/ft_transcendence/actions/workflows/ci.yml) (`.github/workflows/ci.yml`):
